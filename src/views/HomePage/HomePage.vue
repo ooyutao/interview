@@ -226,7 +226,7 @@ function searchTree(tree, searchTerm) {
 
     if (newNode.label.includes(searchTerm)) {
       newTree.push(newNode);
-    }
+    }else
     if (newNode.children) {
       newNode.children = searchTree(newNode.children, searchTerm);
       if (newNode.children.length > 0) {
