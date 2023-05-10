@@ -3,6 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "editor.formatOnType":true,
+  "editor.formatOnSave": true,
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",

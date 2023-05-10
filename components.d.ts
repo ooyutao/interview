@@ -8,6 +8,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     ElButton: typeof import('element-ui/lib/button')['default']
+    ElInput: typeof import('element-ui/lib/input')['default']
     ElMenu: typeof import('element-ui/lib/menu')['default']
     ElMenuItem: typeof import('element-ui/lib/menu-item')['default']
     ElMenuItemGroup: typeof import('element-ui/lib/menu-item-group')['default']

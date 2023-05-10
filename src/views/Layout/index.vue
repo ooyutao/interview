@@ -37,7 +37,7 @@ provide('test', setTest)
     background: #fff;
     box-sizing: border-box;
     width: 100%;
-    height: 100%;
+    height: calc(100% - 20px);
     overflow: auto;
   }
 }
