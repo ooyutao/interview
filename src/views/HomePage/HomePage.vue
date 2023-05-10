@@ -6,10 +6,19 @@
     </div>
     <!-- tree container -->
     <div class="tree-container" id="treeContainer">
-      <vue2-org-tree style="width:calc(100% - 30px);height: calc(100% - 30px);" :data="mainData" labelWidth="160"
-        :horizontal="true" :label-class-name="labelClassName" collapsable @on-expand="onExpand"
-        :render-content="renderContent" />
+      <!-- :w="zoomW" :h="zoomH" -->
+      <vue-draggable-resizable w="auto" h="auto" :grid="[5,5]" :x="5" :y="5" 
+      :scale="scale" 
+      :resizable="true" 
+      :draggable="true"
+      @dragstop="onDragstop" 
+      @resize="handleResize">
+        <vue2-org-tree style="width:calc(100% - 30px);height: calc(100% - 30px);" :style="{'transform':`scale(${scale}, ${scale})`}" :data="mainData" :labelWidth="120"
+          :horizontal="true" :label-class-name="labelClassName" collapsable @on-expand="onExpand"
+          :render-content="renderContent" />
+      </vue-draggable-resizable>
     </div>
+    
     <!-- 缩略图容器 -->
     <!-- page nav panel -->
     <div class="page-nav-panel" id="pageCanvas" :class="!showViewPanel && 'close-panel'">
@@ -23,11 +32,16 @@
       <!-- 全景图盒子 -->
       <!-- 缩略图 -->
       <transition name="viewPanel">
-        <div class="view-img-box" id="viewCanvas" v-show="showViewPanel" :class="'bigHeightView'">
+        <div class="view-img-box" id="viewCanvas" v-show="showViewPanel" :class="'bigHeightView'"  >
           <!-- 缩略图滑动方块 -->
           <div id="viewEye"></div>
         </div>
       </transition>
+    </div>
+    <div class="zoom">
+      <el-button class="el-icon-zoom-in" @click="fullDcreenDisplay(-0.1)"></el-button>
+      <el-button class="el-icon-zoom-out" @click="fullDcreenDisplay(0.1)"></el-button>
+      <el-button class="el-icon-full-screen" @click="fullDcreenDisplay(0)"></el-button>
     </div>
   </div>
 </template>
@@ -36,6 +50,9 @@ import { onMounted, ref, set, computed } from 'vue'
 import html2canvas from 'html2canvas'
 import Vue2OrgTree from 'vue2-org-tree'
 import 'vue2-org-tree/dist/style.css'
+import VueDraggableResizable from 'vue-draggable-resizable'
+import 'vue-draggable-resizable/dist/VueDraggableResizable.css'
+
 const data: any = ref({
   id: 0,
   label: "京东集团-京东物流",
@@ -223,6 +240,7 @@ function searchTree(tree, searchTerm) {
   const newTree = [];
   for (const node of tree) {
     const newNode:any = JSON.parse(JSON.stringify(node));
+
     if (newNode.label.includes(searchTerm)) {
       newTree.push(newNode);
     }else
@@ -268,14 +286,16 @@ function onViewPanel(){
   }
 }
 
-onMounted(() => {
-  getMainData();
-})
+
 function init() {
   setTimeout(() => {
     clearDraw();
     drawCanvasImg();
   }, 10);
+}
+// 拖拽变化
+function onDragstop(){
+  init();
 }
 // 清空画布
 function clearDraw() {
@@ -474,6 +494,24 @@ function labelClassName(data) {
   
   return 'bg-color-'+data.level
 }
+// 全屏展示
+const scale:any = ref(1);
+function fullDcreenDisplay(n){
+  if(n === 0){
+    scale.value = 1;
+  }else{
+    scale.value = scale.value+Number(n);
+  }
+  init();
+}
+
+function handleResize(e){
+  init();
+}
+
+onMounted(() => {
+  getMainData();
+})
 </script>
 <style lang="scss" scoped>
 :deep() {
@@ -503,27 +541,33 @@ function labelClassName(data) {
     border: 1px solid #ff002b;
   }
 }
+.zoom{
+    position: fixed;
+    right:20px;
+    top:70px;
+  }
 
 .content-panel {
   background-color: #fff;
   height: calc(100% - 80px);
   width: 100%;
-  overflow: auto;
+  overflow:hidden;
   position: relative;
   padding-top: 60px;
   .content-query{
     background-color: #eee;
     border-radius: 3px;
     padding: 10px;
-    position:absolute;
-    left:10px;
-    top:10px;
+    position:fixed;
+    left:260px;
+    top:70px;
     z-index: 40;
     button{
       margin: 0 10px;
       cursor: pointer;
     }
   }
+  
 
   #treeContainer {
     min-height: 100%;
@@ -533,7 +577,9 @@ function labelClassName(data) {
   .tree-container {
     display: flex;
     width: max-content;
-    min-width: 100%;
+    width: 2000px;
+    height: 2000px;
+    overflow: visible;
   }
 
   .page-nav-panel {
