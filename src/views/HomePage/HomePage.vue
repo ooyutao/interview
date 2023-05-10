@@ -515,6 +515,9 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 :deep() {
+  .vdr{
+    border: none;
+  }
   .org-tree-node-label-inner{
     font-size: 12px;
   }
