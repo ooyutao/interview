@@ -9,7 +9,7 @@
       <!-- :w="zoomW" :h="zoomH" -->
       <vue-draggable-resizable w="auto" h="auto" :grid="[5,5]" :x="5" :y="5" 
       :scale="scale" 
-      :resizable="true" 
+      :resizable="false" 
       :draggable="true"
       @dragstop="onDragstop" 
       @resize="handleResize">
@@ -39,8 +39,8 @@
       </transition>
     </div>
     <div class="zoom">
-      <el-button class="el-icon-zoom-in" @click="fullDcreenDisplay(-0.1)"></el-button>
-      <el-button class="el-icon-zoom-out" @click="fullDcreenDisplay(0.1)"></el-button>
+      <el-button class="el-icon-zoom-in" @click="fullDcreenDisplay(0.1)"></el-button>
+      <el-button class="el-icon-zoom-out" @click="fullDcreenDisplay(-0.1)"></el-button>
       <el-button class="el-icon-full-screen" @click="fullDcreenDisplay(0)"></el-button>
     </div>
   </div>
