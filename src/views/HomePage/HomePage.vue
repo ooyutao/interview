@@ -223,7 +223,6 @@ function searchTree(tree, searchTerm) {
   const newTree = [];
   for (const node of tree) {
     const newNode:any = JSON.parse(JSON.stringify(node));
-
     if (newNode.label.includes(searchTerm)) {
       newTree.push(newNode);
     }else
