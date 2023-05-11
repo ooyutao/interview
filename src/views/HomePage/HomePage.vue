@@ -39,6 +39,7 @@
         </transition>
       </div>
       <div class="zoom">
+        <span class="zoom-scale">缩放比例：{{ (scale*100).toFixed(2) }}%</span>
         <el-button class="el-icon-zoom-in" @click="fullDcreenDisplay(0.1)"></el-button>
         <el-button class="el-icon-zoom-out" @click="fullDcreenDisplay(-0.1)"></el-button>
         <el-button class="el-icon-rank" @click="fullDcreenDisplay(0)"></el-button>
@@ -244,7 +245,7 @@ function getMainData() {
     mainData.value = JSON.parse(JSON.stringify(data.value));
   }
   setTimeout(() => {
-    initData();
+    initData('auto');
   }, 10);
 }
 // 递归查询
@@ -252,7 +253,6 @@ function searchTree(tree, searchTerm) {
   const newTree = [];
   for (const node of tree) {
     const newNode: any = JSON.parse(JSON.stringify(node));
-
     if (newNode.label.includes(searchTerm)) {
       newTree.push(newNode as never);
     } else
@@ -266,7 +266,7 @@ function searchTree(tree, searchTerm) {
   return newTree;
 }
 
-// 获取展开状态
+// 闭合状态
 function collapse(list) {
   list.forEach(function (child) {
     if (child.expand) {
@@ -302,7 +302,7 @@ function init() {
   setTimeout(() => {
     clearDraw();
     drawCanvasImg();
-  }, 10);
+  }, 0);
 }
 // 拖拽变化
 function onDragstop() {
@@ -515,6 +515,7 @@ function fullDcreenDisplay(n) {
     initData();
   } else{
     scale.value = scale.value + Number(n);
+    init();
   }
 }
 
@@ -539,7 +540,6 @@ function initData(type?){
     yDrag.value = (treeEl.height-h)*0.5*h/th;
     
   }
-  
   contentEl.scrollLeft = (treeEl.width-w)*0.5;
   contentEl.scrollTop = (treeEl.height-h)*0.5;
   dragPlugRef.value.left = xDrag.value;
@@ -603,6 +603,10 @@ onMounted(() => {
   position: fixed;
   right: 20px;
   top: 70px;
+  .zoom-scale{
+    font-size: 12px;
+    padding: 0 10px;
+  }
 }
 .content-panel {
   background-color: #fff;
@@ -615,7 +619,7 @@ onMounted(() => {
   .content-query {
     background-color: #eee;
     border-radius: 3px;
-    padding: 10px;
+    padding:5px 10px 5px 5px;
     position: fixed;
     left: 260px;
     top: 70px;
@@ -624,9 +628,9 @@ onMounted(() => {
 
     i {
       padding:0 0 0 5px;
-      margin-left: 10px;
+      margin-left: 5px;
       border-left: 1px solid #ccc;
-      line-height: 22px;
+      line-height: 20px;
       cursor: pointer;
     }
 
